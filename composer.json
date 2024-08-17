@@ -1,0 +1,21 @@
+{
+    "name": "keita_tabuchi/dao",
+    "autoload": {
+        "psr-4": {
+            "Commands\\": "Commands/",
+            "Database\\": "Database/",
+            "DataAccess\\": "Database/DataAccess/",
+            "Implementations\\": "Database/DataAccess/Implementations",
+            "ComputerPart\\": "Database/DataAccess/ComputerPart/",
+            "Interfaces\\": "Database/DataAccess/Interfaces/",
+            "Models\\": "Models/",
+            "Traits\\": "Models/Traits/",
+            "Routing\\": "Routing/",
+            "Render\\": "Response/Render/",
+            "Response\\": "Response/",
+            "Helpers\\": "Helpers/",
+            "Types\\": "Types/"
+
+        }
+    }
+}
