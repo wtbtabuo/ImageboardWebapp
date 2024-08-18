@@ -7,9 +7,9 @@ class DataTimeStamp
     private string $createdAt;
     private string $updatedAt;
 
-    public function __construct(string $createdAt, string $updatedAt) {
+    public function __construct(string $createdAt, ?string $updatedAt) {
         $this->createdAt = $createdAt;
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $updatedAt ?? date('Y-m-d H:i:s');
     }
 
     public function getCreatedAt(): string {

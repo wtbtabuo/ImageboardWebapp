@@ -4,18 +4,18 @@ namespace Database\DataAccess\Implementations;
 
 use Database\DataAccess\Interfaces\PostDAO;
 use Database\DatabaseManager;
-use Models\Posts;
+use Models\Post;
 use Models\DataTimeStamp;
 
 class PostDAOImpl implements PostDAO
 {
-    public function create(ComputerPart $partData): bool
+    public function create(Post $partData): bool
     {
         if($partData->getId() !== null) throw new \Exception('Cannot create a computer part with an existing ID. id: ' . $partData->getId());
         return $this->createOrUpdate($partData);
     }
 
-    public function getById(int $id): ?ComputerPart
+    public function getById(int $id): ?Post
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $computerPart = $mysqli->prepareAndFetchAll("SELECT * FROM computer_parts WHERE id = ?",'i',[$id])[0]??null;
@@ -24,7 +24,7 @@ class PostDAOImpl implements PostDAO
     }
 
 
-    public function update(ComputerPart $partData): bool
+    public function update(Post $partData): bool
     {
         if($partData->getId() === null) throw new \Exception('Computer part specified has no ID.');
 
@@ -48,10 +48,10 @@ class PostDAOImpl implements PostDAO
 
         $results = $mysqli->prepareAndFetchAll($query, 'ii', [$offset, $limit]);
 
-        return $results === null ? [] : $this->resultToPost($results);
+        return $results === null ? [] : $this->resultToPosts($results);
     }
 
-    public function getReplies(int $offset, int $limit): array
+    public function getReplies(Post $postData, int $offset, int $limit): array
     {
         $mysqli = DatabaseManager::getMysqliConnection();
 
@@ -59,10 +59,10 @@ class PostDAOImpl implements PostDAO
 
         $results = $mysqli->prepareAndFetchAll($query, 'ii', [$offset, $limit]);
 
-        return $results === null ? [] : $this->resultsToComputerParts($results);
+        return $results === null ? [] : $this->resultToPost($results);
     }
 
-    public function createOrUpdate(ComputerPart $partData): bool
+    public function createOrUpdate(Post $partData): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
 
@@ -84,6 +84,7 @@ class PostDAOImpl implements PostDAO
             [
                 $partData->getId(), // nullable, will be auto-incremented if null
                 $partData->getReplyToId(), // nullable
+                $partData->getHashId(), // nullable
                 $partData->getSubject(), // nullable
                 $partData->getText(),
                 $partData->getExpiredAt(), // nullable
@@ -102,17 +103,25 @@ class PostDAOImpl implements PostDAO
         return true;
     }
 
-private function resultToPost(array $data): ComputerPart
+private function resultToPost(array $data): Post
 {
-    return new ComputerPart(
+    return new Post(
         id: $data['id'],
-        replyToId: $data['reply_to_id'] ?? null, // Nullable
+        reply_to_id: $data['reply_to_id'] ?? null, // Nullable
+        hash_id: $data['hash_id'],
         subject: $data['subject'] ?? null, // Nullable
         text: $data['text'],
-        expiredAt: $data['expired_at'] ?? null, // Nullable
-        timeStamp: new DataTimeStamp($data['created_at'], $data['updated_at'] ?? $data['created_at']) // Assuming updated_at is handled elsewhere if necessary
+        updated_at: new DataTimeStamp($data['created_at'], $data['updated_at'] ?? null),
+        created_at: new DataTimeStamp($data['created_at'], $data['updated_at']) // Assuming updated_at is handled elsewhere if necessary
     );
 }
+private function resultToPosts(array $results):array{
+    $posts = [];
 
+    foreach($results as $result){
+        $posts[] = $this->resultToPost($result);
+    }
 
+    return $posts;
+}
 }

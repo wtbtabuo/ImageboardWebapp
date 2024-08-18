@@ -13,6 +13,10 @@ class PostSeeds extends AbstractSeeder {
     protected array $tableColumns = [
         [
             'data_type' => 'string',
+            'column_name' => 'hash_id'
+        ],
+        [
+            'data_type' => 'string',
             'column_name' => 'subject'
         ],
         [
@@ -27,13 +31,17 @@ class PostSeeds extends AbstractSeeder {
         // TODO: createRowData()メソッドを実装してください。
         return [
             [
+                "4ec8ae98-d596-4586-a824-b4da484505b8",
                 "sample sub1",
                 "hogehoge",
-            ],            [
+            ],            
+            [
+                "ad14f863-9f83-4324-b6b1-0202ca3e847d",
                 "sample sub2",
                 "hogehogehoge",
             ],
             [
+                "adb60e5d-692c-428b-9c59-753c669ad71b",
                 "sample sub3",
                 "hogehogehogehoge",
             ]

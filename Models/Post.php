@@ -12,9 +12,10 @@ class Post implements Model {
     public function __construct(
         private int $id,
         private ?int $reply_to_id = null,
+        private string $hash_id,
         private ?string $subject = null,
         private string $text,
-        private ?DataTimeStamp $expired_at = null,
+        private ?DataTimeStamp $updated_at = null,
         private DataTimeStamp $created_at
     ) {}
 
@@ -32,6 +33,15 @@ class Post implements Model {
     public function setReplyToId(string $reply_to_id): void {
         $this->reply_to_id = $reply_to_id;
     }
+
+    public function getHashId(): string {
+        return $this->hash_id;
+    }
+
+    public function setHashId(string $hash_id): void {
+        $this->hash_id = $hash_id;
+    }
+
     public function getSubject(): ?string {
         return $this->subject;
     }
@@ -48,14 +58,14 @@ class Post implements Model {
         $this->text = $text;
     }
 
-    public function getExpiredAt(): ?DataTimeStamp
+    public function getUpdated(): ?DataTimeStamp
     {
-        return $this->expired_at;
+        return $this->updated_at;
     }
 
-    public function setExpiredAt(DataTimeStamp $created_at): void
+    public function setUpdated(DataTimeStamp $created_at): void
     {
-        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
     }
 
     public function getCreatedAt(): DataTimeStamp

@@ -13,10 +13,10 @@ class CreatePostTable implements SchemaMigration
             "CREATE TABLE posts (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 reply_to_id INT,
+                hash_id VARCHAR(255) NOT NULL,
                 subject VARCHAR(255),
                 text VARCHAR(255) NOT NULL,
-                expired_at DATETIME,
-                expired_at DATETIME,
+                updated_at DATETIME,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )"
         ];

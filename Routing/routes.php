@@ -10,8 +10,11 @@ use Types\ValueType;
 
 return [
     'home'=>function(): HTTPRenderer{
+        $offset = 0;
+        $limit = 100;
+
         $postDao = new PostDAOImpl();
-        $posts = $postDao->getAllThreads();
+        $posts = $postDao->getAllThreads($offset, $limit);
 
         if($posts === null) throw new Exception('No posts here!');
 
