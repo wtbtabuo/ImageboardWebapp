@@ -5,7 +5,7 @@ namespace Models;
 use Models\Interfaces\Model;
 use Models\Traits\GenericModel;
 
-class ComputerPart implements Model {
+class Post implements Model {
     use GenericModel;
 
     // php 8のコンストラクタのプロパティプロモーションは、インスタンス変数を自動的に設定します。

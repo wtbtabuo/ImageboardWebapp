@@ -4,18 +4,18 @@ use Helpers\ValidationHelper;
 use Models\ComputerPart;
 use Response\HTTPRenderer;
 use Response\Render\HTMLRenderer;
-use Database\DataAccess\Implementations\ComputerPartDAOImpl;
+use Database\DataAccess\Implementations\PostDAOImpl;
 use Response\Render\JSONRenderer;
 use Types\ValueType;
 
 return [
     'home'=>function(): HTTPRenderer{
-        $partDao = new ComputerPartDAOImpl();
-        $part = $partDao->getRandom();
+        $postDao = new PostDAOImpl();
+        $posts = $postDao->getAllThreads();
 
-        if($part === null) throw new Exception('No parts are available!');
+        if($posts === null) throw new Exception('No posts here!');
 
-        return new HTMLRenderer('component/computer-part-card', ['part'=>$part]);
+        return new HTMLRenderer('component/home', ['posts'=>$posts]);
     },
     'parts'=>function(): HTTPRenderer{
         // IDの検証

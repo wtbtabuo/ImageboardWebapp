@@ -16,6 +16,7 @@ class CreatePostTable implements SchemaMigration
                 subject VARCHAR(255),
                 text VARCHAR(255) NOT NULL,
                 expired_at DATETIME,
+                expired_at DATETIME,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             )"
         ];
