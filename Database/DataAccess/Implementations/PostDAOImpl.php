@@ -15,10 +15,10 @@ class PostDAOImpl implements PostDAO
         return $this->createOrUpdate($partData);
     }
 
-    public function getById(int $id): ?Post
+    public function getByHashId(string $id): ?Post
     {
         $mysqli = DatabaseManager::getMysqliConnection();
-        $computerPart = $mysqli->prepareAndFetchAll("SELECT * FROM computer_parts WHERE id = ?",'i',[$id])[0]??null;
+        $computerPart = $mysqli->prepareAndFetchAll("SELECT * FROM posts WHERE hash_id = ?",'s',[$id])[0]??null;
 
         return $computerPart === null ? null : $this->resultToPost($computerPart);
     }
@@ -54,10 +54,10 @@ class PostDAOImpl implements PostDAO
     public function getReplies(Post $postData, int $offset, int $limit): array
     {
         $mysqli = DatabaseManager::getMysqliConnection();
+        $id = $postData->getId();
+        $query = "SELECT * FROM posts WHERE id = ? LIMIT ?, ?";
 
-        $query = "SELECT * FROM computer_parts LIMIT ?, ?";
-
-        $results = $mysqli->prepareAndFetchAll($query, 'ii', [$offset, $limit]);
+        $results = $mysqli->prepareAndFetchAll($query, 'sii', [$id, $offset, $limit]);
 
         return $results === null ? [] : $this->resultToPost($results);
     }

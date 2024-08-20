@@ -20,28 +20,27 @@ return [
 
         return new HTMLRenderer('component/home', ['posts'=>$posts]);
     },
-    'parts'=>function(): HTTPRenderer{
-        // IDの検証
-        $id = ValidationHelper::integer($_GET['id']??null);
+    'thread' => function(): HTTPRenderer {
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $hash_id = basename($uri); // URLからスレッドIDを取得
+        $postDao = new PostDAOImpl();
+        $thread = $postDao->getByHashId($hash_id);
+        if ($thread === null) throw new Exception('指定されたスレッドは見つかりませんでした！');
 
-        $partDao = new ComputerPartDAOImpl();
-        $part = $partDao->getById($id);
-
-        if($part === null) throw new Exception('Specified part was not found!');
-
-        return new HTMLRenderer('component/computer-part-card', ['part'=>$part]);
+        return new HTMLRenderer('component/thread', ['thread' => $thread]);
     },
-    'parts/all'=>function(): HTTPRenderer{
-        // IDの検証
-        $offset = ValidationHelper::integer($_GET['offset']?? 5);
-        $limit = ValidationHelper::integer($_GET['limit']?? 10);
+    'replies'=>function(): HTTPRenderer{
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $hash_id = basename($uri); // URLからスレッドIDを取得
+        $postDao = new PostDAOImpl();
+        $thread = $postDao->getByHashId($hash_id);
+        $offset = 0;
+        $limit = 1000;
+        $allReplies = $postDao->getReplies($thread, $offset, $limit);
 
-        $partDao = new ComputerPartDAOImpl();
-        $parts = $partDao->getAll($offset, $limit);
+        if($allReplies === null) throw new Exception('All replies were not found!');
 
-        if($parts === null) throw new Exception('All parts were not found!');
-
-        return new HTMLRenderer('component/all-computer-parts', ['parts'=>$parts]);
+        return new JSONRenderer(['parts'=>$parts]);
     },
     'parts/type'=>function(): HTTPRenderer{
         // IDの検証
