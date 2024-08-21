@@ -43,6 +43,34 @@ document.addEventListener("DOMContentLoaded", function() {
                 noRepliesMessage.textContent = "No replies found.";
                 container.appendChild(noRepliesMessage);
             }
+
+            // 入力フォームのHTMLを作成
+            const replyFormContainer = document.createElement("div");
+            replyFormContainer.classList.add("card", "m-2"); // カードと同じスタイルを適用
+            replyFormContainer.style.width = "18rem"; // 親スレッドと同じ幅に設定
+            replyFormContainer.innerHTML = `
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Reply to this thread</h6>
+                    <form id="replyForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="replyTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="replyTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="replyText" class="form-label">Your Reply</label>
+                            <textarea class="form-control" id="replyText" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="replyImage" class="form-label">Attach Image</label>
+                            <input class="form-control" type="file" id="replyImage" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post Reply</button>
+                    </form>
+                </div>
+            `;
+
+            // 最後にフォームをコンテナに追加
+            container.appendChild(replyFormContainer);
         })
         .catch(error => {
             console.error("Error fetching replies:", error);
