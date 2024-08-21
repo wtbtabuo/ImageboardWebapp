@@ -29,7 +29,7 @@
         <h1>ImageboardWebapp</h1>
         <div>
             <a href="#" class="btn btn-outline-light">New Thread</a>
-            <a href="#" class="btn btn-outline-light">Home</a>
+            <a href="/home" class="btn btn-outline-light">Home</a> <!-- /homeにアクセス -->
         </div>
     </div>
 </header>
