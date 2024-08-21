@@ -8,14 +8,15 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             // 子スレッドを表示するためのコンテナを取得
-            const container = document.querySelector(".container");
+            const container = document.querySelector(".container-2");
 
             // 子スレッドデータをループして表示
-            if (data.length > 0) {
-                data.forEach(reply => {
+            const replies = data.replies;
+            if (replies.length > 0) {
+                replies.forEach(reply => {
                     const replyCard = document.createElement("div");
                     replyCard.classList.add("card", "m-2");
-                    replyCard.style.width = "16rem";
+                    replyCard.style.width = "18rem"; // 親スレッドと同じ幅に設定
                     replyCard.setAttribute("data-hash-id", reply.hash_id);
 
                     replyCard.innerHTML = `
@@ -24,11 +25,16 @@ document.addEventListener("DOMContentLoaded", function() {
                             <p class="card-text">
                                 <strong>Text:</strong> ${reply.text}<br />
                             </p>
-                            <p class="card-text"><small class="text-muted">Last updated on ${reply.updated_at}</small></p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    Created at: ${reply.created_at.createdAt}<br />
+                                    Last updated at: ${reply.updated_at.updatedAt}
+                                </small>
+                            </p>
                         </div>
                     `;
 
-                    // コンテナに追加
+                    // 親スレッドのカードの後に子スレッドのカードを追加
                     container.appendChild(replyCard);
                 });
             } else {

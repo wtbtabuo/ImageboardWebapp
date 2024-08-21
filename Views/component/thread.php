@@ -1,4 +1,4 @@
-<div class="container d-flex flex-column align-items-center">
+<div class="container-2 d-flex flex-column align-items-center">
     <!-- 親スレッドの表示 -->
     <div class="card m-2" style="width: 18rem;" data-hash-id="<?= htmlspecialchars($thread->getHashId()) ?>">
         <div class="card-body">

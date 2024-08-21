@@ -55,11 +55,10 @@ class PostDAOImpl implements PostDAO
     {
         $mysqli = DatabaseManager::getMysqliConnection();
         $id = $postData->getId();
-        $query = "SELECT * FROM posts WHERE id = ? LIMIT ?, ?";
+        $query = "SELECT * FROM posts WHERE reply_to_id = ? LIMIT ?, ?";
 
         $results = $mysqli->prepareAndFetchAll($query, 'sii', [$id, $offset, $limit]);
-
-        return $results === null ? [] : $this->resultToPost($results);
+        return $results === null ? [] : $this->resultToPosts($results);
     }
 
     public function createOrUpdate(Post $partData): bool

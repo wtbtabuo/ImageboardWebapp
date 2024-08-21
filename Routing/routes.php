@@ -37,10 +37,16 @@ return [
         $offset = 0;
         $limit = 1000;
         $allReplies = $postDao->getReplies($thread, $offset, $limit);
-
         if($allReplies === null) throw new Exception('All replies were not found!');
 
-        return new JSONRenderer(['parts'=>$parts]);
+        // $allRepliesを配列に変換する
+        $allRepliesArray = [];
+        foreach ($allReplies as $reply) {
+            $allRepliesArray[] = $reply->toArray(); // 各Postオブジェクトを配列に変換
+        }
+
+        return new JSONRenderer(['replies' => $allRepliesArray]);
+        return new JSONRenderer(['replies'=>$allReplies]);
     },
     'parts/type'=>function(): HTTPRenderer{
         // IDの検証

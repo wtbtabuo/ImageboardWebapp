@@ -18,7 +18,23 @@ class Post implements Model {
         private ?DataTimeStamp $updated_at = null,
         private DataTimeStamp $created_at
     ) {}
-
+    public function toArray(): array {
+        return [
+            'id' => $this->id,
+            'reply_to_id' => $this->reply_to_id,
+            'hash_id' => $this->hash_id,
+            'subject' => $this->subject,
+            'text' => $this->text,
+            'updated_at' => [
+                'createdAt' => $this->updated_at->getCreatedAt(),
+                'updatedAt' => $this->updated_at->getUpdatedAt(),
+            ],
+            'created_at' => [
+                'createdAt' => $this->created_at->getCreatedAt(),
+                'updatedAt' => $this->created_at->getUpdatedAt(),
+            ]
+        ];
+    }
     public function getId(): ?int {
         return $this->id;
     }
