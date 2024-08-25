@@ -54,100 +54,28 @@ return [
         if (isset($_FILES['image'])) {
             $uid = $_POST['uid']; // ユニークIDを受け取る
             $uploadDir = __DIR__ . '/..' . '/assets/'; // assetsディレクトリ
-            $uploadFile = $uploadDir . $uid . '.png'; // ファイル名はuid.png
-            echo $uploadFile;
+            $uploadFile = $uploadDir . $uid . '.jpg';
             // 画像ファイルをassetsディレクトリに保存
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-                // 保存成功時の処理
-                echo json_encode(['success' => true]);
-            } else {
-                // 保存失敗時の処理
-                echo json_encode(['success' => false, 'message' => 'Failed to save image']);
-            }
+            move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile);
         }
         // IDの検証
         $title = $_POST['title'];
         $text = $_POST['text'];
         $uid = $_POST['uid'];
-        $replyToId = $_POST['id'];
+        if (isset($_POST['id'])){
+            $replyToId = $_POST['id'];
+        } else {
+            $replyToId = null;
+        }
 
         $post = new Post(null, $replyToId, $uid, $title, $text, null, null);
         $postDao = new PostDAOImpl();
 
         $posts = $postDao->createOrUpdate($post);
 
-        return new JSONRenderer(['posts'=>$posts]);
+        return new JSONRenderer(['posts'=>[]]);
     },
-    'update/part' => function(): HTMLRenderer {
-        $part = null;
-        $partDao = new ComputerPartDAOImpl();
-        if(isset($_GET['id'])){
-            $id = ValidationHelper::integer($_GET['id']);
-            $part = $partDao->getById($id);
-        }
-        return new HTMLRenderer('component/update-computer-part',['part'=>$part]);
-    },
-    'form/update/part' => function(): HTTPRenderer {
-        try {
-            // リクエストメソッドがPOSTかどうかをチェックします
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new Exception('Invalid request method!');
-            }
-
-            $required_fields = [
-                'name' => ValueType::STRING,
-                'type' => ValueType::STRING,
-                'brand' => ValueType::STRING,
-                'modelNumber' => ValueType::STRING,
-                'releaseDate' => ValueType::DATE,
-                'description' => ValueType::STRING,
-                'performanceScore' => ValueType::INT,
-                'marketPrice' => ValueType::FLOAT,
-                'rsm' => ValueType::FLOAT,
-                'powerConsumptionW' => ValueType::FLOAT,
-                'lengthM' => ValueType::FLOAT,
-                'widthM' => ValueType::FLOAT,
-                'heightM' => ValueType::FLOAT,
-                'lifespan' => ValueType::INT,
-            ];
-
-            $partDao = new ComputerPartDAOImpl();
-
-            // 入力に対する単純なバリデーション。実際のシナリオでは、要件を満たす完全なバリデーションが必要になることがあります。
-            $validatedData = ValidationHelper::validateFields($required_fields, $_POST);
-
-            if(isset($_POST['id'])) $validatedData['id'] = ValidationHelper::integer($_POST['id']);
-
-            // 名前付き引数を持つ新しいComputerPartオブジェクトの作成＋アンパッキング
-            $part = new ComputerPart(...$validatedData);
-
-            error_log(json_encode($part->toArray(), JSON_PRETTY_PRINT));
-
-            // 新しい部品情報でデータベースの更新を試みます。
-            // 別の方法として、createOrUpdateを実行することもできます。
-            if(isset($validatedData['id'])) $success = $partDao->update($part);
-            else $success = $partDao->create($part);
-
-            if (!$success) {
-                throw new Exception('Database update failed!');
-            }
-
-            return new JSONRenderer(['status' => 'success', 'message' => 'Part updated successfully']);
-        } catch (\InvalidArgumentException $e) {
-            error_log($e->getMessage()); // エラーログはPHPのログやstdoutから見ることができます。
-            return new JSONRenderer(['status' => 'error', 'message' => 'Invalid data.']);
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            return new JSONRenderer(['status' => 'error', 'message' => 'An error occurred.']);
-        }
-    },
-    'delete/part' => function(): HTMLRenderer {
-        $part = null;
-        $partDao = new ComputerPartDAOImpl();
-        if(isset($_GET['id'])){
-            $id = ValidationHelper::integer($_GET['id']);
-            $part = $partDao->delete($id);
-        }
-        return new HTMLRenderer('component/delete-computer-part',['part'=>$part]);
+    'newPost'=>function(): HTTPRenderer{
+        return new HTMLRenderer('component/newPost', []);
     },
 ];

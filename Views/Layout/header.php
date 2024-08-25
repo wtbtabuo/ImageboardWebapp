@@ -28,8 +28,8 @@
     <div class="container d-flex justify-content-between align-items-center">
         <h1>ImageboardWebapp</h1>
         <div>
-            <a href="#" class="btn btn-outline-light">New Thread</a>
-            <a href="/home" class="btn btn-outline-light">Home</a> <!-- /homeにアクセス -->
+            <a href="/newPost" class="btn btn-outline-light">New Thread</a>
+            <a href="/home" class="btn btn-outline-light">Home</a>
         </div>
     </div>
 </header>
