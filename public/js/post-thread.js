@@ -12,10 +12,7 @@ export function initializeReplyFormHandling(Id) {
         // フォームデータを取得
         const file = fileInput.files[0];
         const formData = new FormData();
-        console.log(titleInput)
-        console.log(text)
-        console.log(uid)
-        console.log(Id)
+
         formData.append('image', file);
         formData.append('id', Id);
         formData.append('title', titleInput);

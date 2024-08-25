@@ -49,8 +49,23 @@ return [
         return new JSONRenderer(['replies' => $allRepliesArray]);
     },
     'newReply'=>function(): JSONRenderer{
+        // 画像の保存
+    // 画像ファイルがアップロードされているか確認
+        if (isset($_FILES['image'])) {
+            $uid = $_POST['uid']; // ユニークIDを受け取る
+            $uploadDir = __DIR__ . '/..' . '/assets/'; // assetsディレクトリ
+            $uploadFile = $uploadDir . $uid . '.png'; // ファイル名はuid.png
+            echo $uploadFile;
+            // 画像ファイルをassetsディレクトリに保存
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                // 保存成功時の処理
+                echo json_encode(['success' => true]);
+            } else {
+                // 保存失敗時の処理
+                echo json_encode(['success' => false, 'message' => 'Failed to save image']);
+            }
+        }
         // IDの検証
-        $image = $_POST['image']??null;
         $title = $_POST['title'];
         $text = $_POST['text'];
         $uid = $_POST['uid'];
