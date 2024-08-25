@@ -21,8 +21,24 @@ document.addEventListener("DOMContentLoaded", function() {
                     replyCard.classList.add("card", "m-2");
                     replyCard.style.width = "18rem"; // 親スレッドと同じ幅に設定
                     replyCard.setAttribute("data-hash-id", reply.hash_id);
-
-                    replyCard.innerHTML = `
+                
+                    // 画像の表示処理
+                    const imgUrl = "../assets/" + reply.hash_id + ".png"; // 画像のURLを適切に指定
+                    fetch(imgUrl)
+                        .then((response) => {
+                            if (response.ok) { // 画像が存在するかどうかを確認
+                                console.log("img exists");
+                                const imageElement = document.createElement("img");
+                                imageElement.src = imgUrl;
+                                imageElement.alt = "Attached Image";
+                                imageElement.style.width = "100%";
+                                replyCard.appendChild(imageElement);
+                            } else {
+                                console.log("img does not exist");
+                            }
+                        })
+                
+                    replyCard.innerHTML += `
                         <div class="card-body">
                             <h6 class="card-subtitle mb-2 text-muted">${reply.subject}</h6>
                             <p class="card-text">
@@ -36,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             </p>
                         </div>
                     `;
-
+                
                     // 親スレッドのカードの後に子スレッドのカードを追加
                     container.appendChild(replyCard);
                 });
