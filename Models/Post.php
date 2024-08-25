@@ -10,13 +10,13 @@ class Post implements Model {
 
     // php 8のコンストラクタのプロパティプロモーションは、インスタンス変数を自動的に設定します。
     public function __construct(
-        private int $id,
+        private ?int $id = null,
         private ?int $reply_to_id = null,
         private string $hash_id,
         private ?string $subject = null,
         private string $text,
         private ?DataTimeStamp $updated_at = null,
-        private DataTimeStamp $created_at
+        private ?DataTimeStamp $created_at = null
     ) {}
     public function toArray(): array {
         return [
@@ -79,12 +79,12 @@ class Post implements Model {
         return $this->updated_at;
     }
 
-    public function setUpdated(DataTimeStamp $created_at): void
+    public function setUpdated(DataTimeStamp $updated_at): void
     {
         $this->updated_at = $updated_at;
     }
 
-    public function getCreatedAt(): DataTimeStamp
+    public function getCreatedAt(): ?DataTimeStamp
     {
         return $this->created_at;
     }

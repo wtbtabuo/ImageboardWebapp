@@ -61,19 +61,20 @@ class PostDAOImpl implements PostDAO
         return $results === null ? [] : $this->resultToPosts($results);
     }
 
-    public function createOrUpdate(Post $partData): bool
+    public function createOrUpdate(Post $postData): bool
     {
         $mysqli = DatabaseManager::getMysqliConnection();
 
         $query =
         <<<SQL
-            INSERT INTO posts (id, reply_to_id, subject, text, expired_at, created_at)
+            INSERT INTO posts (reply_to_id, hash_id, subject, text, updated_at, created_at)
             VALUES (?, ?, ?, ?, ?, NOW())
             ON DUPLICATE KEY UPDATE
                 reply_to_id = VALUES(reply_to_id),
+                hash_id = VALUES(hash_id),
                 subject = VALUES(subject),
                 text = VALUES(text),
-                expired_at = VALUES(expired_at),
+                updated_at = VALUES(updated_at),
                 created_at = VALUES(created_at);
         SQL;
 
@@ -81,22 +82,21 @@ class PostDAOImpl implements PostDAO
             $query,
             'issss',
             [
-                $partData->getId(), // nullable, will be auto-incremented if null
-                $partData->getReplyToId(), // nullable
-                $partData->getHashId(), // nullable
-                $partData->getSubject(), // nullable
-                $partData->getText(),
-                $partData->getExpiredAt(), // nullable
+                $postData->getReplyToId(), // nullable
+                $postData->getHashId(), // nullable
+                $postData->getSubject(), // nullable
+                $postData->getText(),
+                $postData->getCreatedAt(), // nullable
             ]
         );
 
         if (!$result) return false;
 
         // If the ID was null, set the auto-incremented ID
-        if ($partData->getId() === null) {
-            $partData->setId($mysqli->insert_id);
-            $timeStamp = $partData->getTimeStamp() ?? new DataTimeStamp(date('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
-            $partData->setTimeStamp($timeStamp);
+        if ($postData->getId() === null) {
+            $postData->setId($mysqli->insert_id);
+            $updatedAt = $postData->getUpdated() ?? new DataTimeStamp(date('Y-m-d H:i:s'), date('Y-m-d H:i:s'));
+            $postData->setUpdated($updatedAt);
         }
 
         return true;

@@ -1,7 +1,8 @@
 <?php
 
 use Helpers\ValidationHelper;
-use Models\ComputerPart;
+use Models\Post;
+use Models\DataTimeStamp;
 use Response\HTTPRenderer;
 use Response\Render\HTMLRenderer;
 use Database\DataAccess\Implementations\PostDAOImpl;
@@ -46,20 +47,21 @@ return [
         }
 
         return new JSONRenderer(['replies' => $allRepliesArray]);
-        return new JSONRenderer(['replies'=>$allReplies]);
     },
-    'parts/type'=>function(): HTTPRenderer{
+    'newReply'=>function(): JSONRenderer{
         // IDの検証
-        $type = $_GET['type']??null;
-        $offset = $_GET['offset']??5;
-        $limit = $_GET['limit']??10;
+        $image = $_POST['image']??null;
+        $title = $_POST['title'];
+        $text = $_POST['text'];
+        $uid = $_POST['uid'];
+        $replyToId = $_POST['id'];
 
-        $partDao = new ComputerPartDAOImpl();
-        $parts = $partDao->getAllByType($type, $offset, $limit);
+        $post = new Post(null, $replyToId, $uid, $title, $text, null, null);
+        $postDao = new PostDAOImpl();
 
-        if($parts === null) throw new Exception('Type parts were not found!');
+        $posts = $postDao->createOrUpdate($post);
 
-        return new HTMLRenderer('component/all-computer-parts', ['parts'=>$parts]);
+        return new JSONRenderer(['posts'=>$posts]);
     },
     'update/part' => function(): HTMLRenderer {
         $part = null;

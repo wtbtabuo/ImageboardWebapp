@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 親スレッドのhash_idを取得
     const threadElement = document.querySelector("[data-hash-id]");
     const hashId = threadElement.getAttribute("data-hash-id");
+    const Id = threadElement.getAttribute("id");
 
     // /replies/{hash_id} にリクエストを送信
     fetch(`/replies/${hashId}`)
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <form id="replyForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="replyTitle" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="replyTitle" name="title" required>
+                            <input id="titleInput" type="text" class="form-control" id="replyTitle" name="title" required>
                         </div>
                         <div class="mb-3">
                             <label for="replyText" class="form-label">Your Reply</label>
@@ -75,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
             container.appendChild(replyFormContainer);
 
             // 別ファイルの関数を使ってフォーム送信イベントを初期化
-            initializeReplyFormHandling();
+            initializeReplyFormHandling(Id);
         })
         .catch(error => {
             console.error("Error fetching replies:", error);

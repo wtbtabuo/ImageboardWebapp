@@ -1,6 +1,6 @@
 <div class="container-2 d-flex flex-column align-items-center">
     <!-- 親スレッドの表示 -->
-    <div class="card m-2" style="width: 18rem;" data-hash-id="<?= htmlspecialchars($thread->getHashId()) ?>">
+    <div class="card m-2" style="width: 18rem;" data-hash-id="<?= htmlspecialchars($thread->getHashId()) ?>" id="<?= htmlspecialchars($thread->getId()) ?>">
         <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted">
                 <?= htmlspecialchars($thread->getSubject()) ?>
@@ -15,6 +15,7 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
 <script src="/public/js/image-loader.js"></script>
 <script type="module" src="/public/js/replies-loader.js"></script>
 <script type="module" src="/public/js/post-thread.js"></script>
